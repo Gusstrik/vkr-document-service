@@ -8,5 +8,6 @@ import java.util.Set;
 public class UserGroupFilter {
     private String query;
     private Set<String> ids;
+    private String user;
 
 }

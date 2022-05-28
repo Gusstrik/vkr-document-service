@@ -18,7 +18,7 @@ public class UserGroupServiceTest extends BaseTest{
     @Test
     public void createNewGroupTest(){
         UserGroupDto userGroupDto = new UserGroupDto();
-        userGroupDto.setUsers(new HashSet<>(Arrays.asList("test_user")));
+        userGroupDto.setUsers(new HashSet<>(Arrays.asList("user")));
         userGroupDto.setName("test_group");
         System.out.println(userGroupService.saveUserGroup(userGroupDto));
     }
@@ -41,6 +41,15 @@ public class UserGroupServiceTest extends BaseTest{
     public void searchUserGroupTest(){
         UserGroupFilter filter = new UserGroupFilter();
         filter.setQuery(" ed ");
+        PagingRequestDto<UserGroupFilter> requestDto = new PagingRequestDto<>();
+        requestDto.setData(filter);
+        System.out.println(userGroupService.searchGroup(requestDto));
+    }
+
+    @Test
+    public void searchUserGroupByUserTest(){
+        UserGroupFilter filter = new UserGroupFilter();
+        filter.setUser("user");
         PagingRequestDto<UserGroupFilter> requestDto = new PagingRequestDto<>();
         requestDto.setData(filter);
         System.out.println(userGroupService.searchGroup(requestDto));

@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(DocumentServiceRepositroyConfig.class)
-@ComponentScan(basePackages = "com.gusstrik.vkr.service.documentservice.core.impl")
+@ComponentScan(basePackages = {"com.gusstrik.vkr.service.documentservice.core.impl"
+        , "com.gusstrik.vkr.service.documentservice.core.mapper"})
 public class DocumentServiceCoreConfig {
+    public static ThreadLocal<String> currentUser = new ThreadLocal<>();
 }

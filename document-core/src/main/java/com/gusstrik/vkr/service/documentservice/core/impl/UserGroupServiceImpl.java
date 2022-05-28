@@ -5,15 +5,13 @@ import com.gusstrik.vkr.common.dto.OperationError;
 import com.gusstrik.vkr.common.dto.PagingRequestDto;
 import com.gusstrik.vkr.common.dto.PagingResponseDto;
 import com.gusstrik.vkr.service.documentservice.core.UserGroupService;
-import com.gusstrik.vkr.service.documentservice.core.mapper.DocumentTypeModelMapper;
 import com.gusstrik.vkr.service.documentservice.core.mapper.UserGroupMapper;
 import com.gusstrik.vkr.service.documentservice.dto.DocumentTypeDto;
 import com.gusstrik.vkr.service.documentservice.dto.UserGroupDto;
 import com.gusstrik.vkr.service.documentservice.dto.request.UserGroupFilter;
-import com.gusstrik.vkr.service.documentservice.model.DocumentType;
 import com.gusstrik.vkr.service.documentservice.model.UserGroup;
+import com.gusstrik.vkr.service.documentservice.repository.AuthorityRepository;
 import com.gusstrik.vkr.service.documentservice.repository.UserGroupRepository;
-import com.gusstrik.vkr.service.documentservice.repository.util.DocumentTypeSpecification;
 import com.gusstrik.vkr.service.documentservice.repository.util.UserGroupSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,6 +23,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,9 +32,11 @@ import java.util.stream.Collectors;
 public class UserGroupServiceImpl implements UserGroupService {
 
     private final UserGroupRepository userGroupRepository;
+    private final AuthorityRepository authorityRepository;
 
-    public UserGroupServiceImpl(UserGroupRepository userGroupRepository) {
+    public UserGroupServiceImpl(UserGroupRepository userGroupRepository, AuthorityRepository authorityRepository) {
         this.userGroupRepository = userGroupRepository;
+        this.authorityRepository = authorityRepository;
     }
 
     @Override
@@ -76,6 +77,16 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
+    public List<UserGroupDto> getByUser(String user) {
+        UserGroupFilter userGroupFilter = new UserGroupFilter();
+        userGroupFilter.setUser(user);
+        List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecification.specification(userGroupFilter));
+        if(CollectionUtils.isEmpty(userGroups))
+            return null;
+        return userGroups.stream().map(UserGroupMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public PagingResponseDto<UserGroupDto> searchGroup(PagingRequestDto<UserGroupFilter> requestDto) {
         if (ObjectUtils.isEmpty(requestDto.getPage()))
@@ -107,6 +118,7 @@ public class UserGroupServiceImpl implements UserGroupService {
             return response;
         }
         UserGroup userGroup = searchResult.get();
+        authorityRepository.deleteByGroup(userGroup.getId());
         userGroupRepository.delete(userGroup);
         response.setSuccess(true);
         return response;
