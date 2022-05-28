@@ -21,7 +21,7 @@ public class StoredEntity {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOnea
     private Catalog parentCatalog;
 
     @CreationTimestamp

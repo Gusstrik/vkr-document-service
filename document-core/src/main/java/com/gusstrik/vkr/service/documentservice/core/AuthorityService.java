@@ -18,4 +18,6 @@ public interface AuthorityService {
     Set<UserRights> getUserRights (Long catalogId);
 
     List<AuthorityDto> inheritCatalogAuthorities(StoredEntity storedEntity);
+
+    void deleteEntityAuthorities (Long storedEntityId);
 }

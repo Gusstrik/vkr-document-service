@@ -135,6 +135,7 @@ public class CatalogServiceImpl implements CatalogService {
                 operationError.setMessage("Недостаточно прав для удаления каталога");
                 response.setErrorList(Arrays.asList(operationError));
             }
+            authorityService.deleteEntityAuthorities(id);
             storedEntityRepository.deleteInheritance(searchCatalog.get().getId());
             response.setSuccess(true);
         } else {

@@ -26,7 +26,7 @@ public class DocumentTypeServiceTest extends BaseTest {
         dto.setName("Новый тип");
         dto.setDeleted(false);
         DocumentStateModelDto modelDto = new DocumentStateModelDto();
-        modelDto.setId(1L);
+        modelDto.setId(2L);
         dto.setStateModel(modelDto);
         BaseDataResponse<DocumentTypeDto> response = documentTypeService.saveTypeModel(dto);
         System.out.println(response);

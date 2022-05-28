@@ -29,9 +29,11 @@ public interface AuthorityRepository extends JpaRepository<AuthorityModel, Long>
 
     @Query(value = "SELECT authority.*\n" +
             "FROM authority\n" +
-            "         left join stored_entity s on authority.id = s.stored_entity_id\n" +
+            "         left join stored_entity s on authority.stored_entity_id = s.id\n" +
             "         left join user_group ug on authority.user_group_id = ug.id\n" +
             "         left join user_group_users ugu on ug.id = ugu.user_group_id\n" +
-            "WHERE ugu.users=:user and s.id = :id;;", nativeQuery = true)
+            "WHERE ugu.users=:user and s.id = :id", nativeQuery = true)
     List<AuthorityModel> findUserAuthorities(@Param("id") Long storedEntityId, @Param("user") String user);
+
+    void deleteAuthorityModelByStoredEntityId(Long storedEntityId);
 }

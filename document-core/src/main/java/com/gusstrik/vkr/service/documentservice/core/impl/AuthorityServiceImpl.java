@@ -65,6 +65,9 @@ public class AuthorityServiceImpl implements AuthorityService {
     public boolean hasWritingAuthority(Long parentCatalogId) {
         if (parentCatalogId == null)
             return true;
+        List<AuthorityModel> authorityModels = authorityRepository.findByStoredEntityId(parentCatalogId);
+        if(CollectionUtils.isEmpty(authorityModels))
+            return true;
         Optional<AuthorityModel> authorityModel = authorityRepository.findWritingAuthority(DocumentServiceCoreConfig.currentUser.get(), parentCatalogId);
         return authorityModel.isPresent();
     }
@@ -106,5 +109,11 @@ public class AuthorityServiceImpl implements AuthorityService {
         }).collect(Collectors.toList());
         authorities = authorityRepository.saveAll(authorities);
         return authorities.stream().map(AuthorityMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void deleteEntityAuthorities(Long storedEntityId) {
+        authorityRepository.deleteAuthorityModelByStoredEntityId(storedEntityId);
     }
 }
