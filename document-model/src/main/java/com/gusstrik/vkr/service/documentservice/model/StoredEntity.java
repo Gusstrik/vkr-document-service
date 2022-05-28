@@ -21,7 +21,7 @@ public class StoredEntity {
     @Column(name = "name")
     private String name;
 
-    @ManyToOnea
+    @ManyToOne
     private Catalog parentCatalog;
 
     @CreationTimestamp
